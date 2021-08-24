@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.spring.mvc.dao.MyBatisBorderDao">
+
+	<select id="getBorderList" resultType="com.spring.mvc.model.beans.BorderBean">
+		select 
+			* 
+		from 
+			border_mst 
+		order by border_code desc;
+	</select>
+	
+	<select id="getBorderDtl" resultType="com.spring.mvc.model.beans.BorderBean">
+		select 
+			* 
+		from 
+			border_mst 
+		where 
+			border_code = #{border_code}
+	</select>
+	
+	<select id="getPreBorderCode" resultType="com.spring.mvc.model.beans.BorderBean">
+		select
+			border_code,
+			border_title
+		from
+			border_mst
+		where
+			border_code = (
+				select
+					max(border_code)
+				from
+					border_mst
+				where
+					border_code &lt; #{border_code}
+			);
+	</select>
+	
+	<select id="getNextBorderCode" resultType="com.spring.mvc.model.beans.BorderBean">
+		select
+			border_code,
+			border_title
+		from
+			border_mst
+		where
+			border_code = (
+				select
+					min(border_code)
+				from
+					border_mst
+				where
+					border_code &gt; #{border_code}
+			);
+	</select>
+	
+	<insert id="insertBorder" parameterType="com.spring.mvc.model.beans.BorderBean">
+		insert into 
+			border_mst 
+		values(
+			0, 
+			#{border_title}, 
+			#{border_content}, 
+			#{border_file}, 
+			#{border_tempfile}, 
+			#{writer_name}, 
+			#{writer_ip}, 
+			now(), 
+			0, 
+			now(), 
+			now()
+		);
+	</insert>
+	
+</mapper>
